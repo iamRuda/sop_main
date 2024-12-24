@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truck Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #notification {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table th, table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f4f4f4;
+            text-align: left;
+        }
+        table td {
+            background-color: #fafafa;
+        }
+        .buttons {
+            text-align: center;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .confirm-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .reject-btn {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+    <script>
+        var socket = new WebSocket("ws://localhost:8088/ws/notifications");
+
+        socket.onmessage = function(event) {
+            var truck = JSON.parse(event.data);
+            document.getElementById("notification").innerHTML = `
+                <h2>New Truck Notification</h2>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <td>${truck.id}</td>
+                    </tr>
+                    <tr>
+                        <th>Brand</th>
+                        <td>${truck.brand}</td>
+                    </tr>
+                    <tr>
+                        <th>Model</th>
+                        <td>${truck.model}</td>
+                    </tr>
+                    <tr>
+                        <th>License Plate</th>
+                        <td>${truck.licensePlate}</td>
+                    </tr>
+                    <tr>
+                        <th>Year of Manufacture</th>
+                        <td>${truck.yearOfManufacture}</td>
+                    </tr>
+                    <tr>
+                        <th>Checked</th>
+                        <td>${truck.checked}</td>
+                    </tr>
+                </table>
+                <div class="buttons">
+                    <button class="confirm-btn" onclick="confirmTruck(${truck.id}, true)">Confirm</button>
+                    <button class="reject-btn" onclick="confirmTruck(${truck.id}, false)">Reject</button>
+                </div>
+            `;
+        };
+
+        function confirmTruck(truckId, confirm) {
+            fetch(`/${truckId}/action?check=` + confirm, { method: 'POST' })
+                .then(response => response.text())
+                .then(result => {
+                    alert(result);
+                    document.getElementById("notification").innerHTML = "Wait moment...";
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                });
+        }
+    </script>
+</head>
+<body>
+<div id="notification">No requests yet.</div>
+</body>
+</html>

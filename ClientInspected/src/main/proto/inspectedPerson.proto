@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.demo.grpc";
+option java_outer_classname = "InspectedPersonProtos";
+option optimize_for = SPEED;
+
+import "google/protobuf/empty.proto";
+
+// Package definition
+package inspectedPerson;
+
+// gRPC Service Definition
+service InspectedPersonService {
+  rpc AllInspectedPerson (google.protobuf.Empty) returns (AllInspectedPersonResponse);
+  rpc GetInspectedPerson (GetInspectedPersonRequest) returns (GetInspectedPersonResponse);
+}
+
+// Request for getting a specific inspected person by ID
+message GetInspectedPersonRequest {
+  int64 id = 1;
+}
+
+// Response for getting a specific inspected person
+message GetInspectedPersonResponse {
+  InspectedPerson inspected_person = 1;
+}
+
+// Response for listing all inspected persons
+message AllInspectedPersonResponse {
+  repeated InspectedPerson inspected_persons = 1;
+}
+
+// DTO for InspectedPerson
+message InspectedPerson {
+  int64 id = 1;
+  string name = 2;
+  string passport_number = 3;
+  bool checked = 4;
+}

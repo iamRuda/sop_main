@@ -1,0 +1,102 @@
+type Query {
+    cargos(id: ID): [CargoDTO]
+    inspecteds(id: ID): [InspectedPersonDTO]
+    inspections(id: ID): [InspectionDTO]
+    inspectors(id: ID): [InspectorDTO]
+    trucks(id: ID): [TruckDTO]
+}
+
+type Mutation {
+    addCargo(cargoDTO: CargoInput): CargoDTO
+    updateCargo(id: ID!, cargoDTO: CargoInput): CargoDTO
+    deleteCargo(id: ID!): CargoDTO
+
+    addTruck(truckDTO: TruckInput): TruckDTO
+    updateTruck(id: ID!, truckDTO: TruckInput): TruckDTO
+    deleteTruck(id: ID!): String
+
+    addInspector(inspectorDTO: InspectorInput): InspectorDTO
+    updateInspector(id: ID!, inspectorDTO: InspectorInput): InspectorDTO
+    deleteInspector(id: ID!): String
+
+    addInspection(inspectionDTO: InspectionInput): InspectionDTO
+    updateInspection(id: ID!, inspectionDTO: InspectionInput): InspectionDTO
+    deleteInspection(id: ID!): String
+
+    addInspected(inspectedPersonDTO: InspectedPersonInput): InspectedPersonDTO
+    updateInspected(id: ID!, inspectedPersonDTO: InspectedPersonInput): InspectedPersonDTO
+    deleteInspected(id: ID!): String
+}
+
+input CargoInput {
+    weight: Float
+    volume: Float
+    items: [String]
+    truckId: ID
+}
+
+input TruckInput {
+    brand: String
+    model: String
+    licensePlate: String
+    yearOfManufacture: Int
+    cargoIds: [ID]
+}
+
+input InspectorInput {
+    name: String
+    employeeNumber: String
+    inspectionIds: [ID]
+}
+
+input InspectionInput {
+    inspectorId: ID
+    inspectedPersonId: ID
+    truckId: ID
+    inspectionDate: String
+    status: String
+}
+
+input InspectedPersonInput {
+    name: String
+    passportNumber: String
+}
+
+type CargoDTO {
+    id: ID
+    weight: Float
+    volume: Float
+    items: [String]
+    truckId: ID
+}
+
+type InspectedPersonDTO {
+    id: ID
+    name: String
+    passportNumber: String
+}
+
+type InspectionDTO {
+    id: ID
+    inspectorId: ID
+    inspectedPersonId: ID
+    truckId: ID
+    inspectionDate: String
+    status: String
+}
+
+type InspectorDTO {
+    id: ID
+    name: String
+    employeeNumber: String
+    inspectionIds: [ID]
+}
+
+type TruckDTO {
+    id: ID
+    brand: String
+    model: String
+    licensePlate: String
+    yearOfManufacture: Int
+    cargoIds: [ID]
+}
